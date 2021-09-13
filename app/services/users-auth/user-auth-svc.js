@@ -28,6 +28,7 @@ const addUser = async (req) => {
         const saveUser = await MstUser.create({
             nik_user: body.nik,
             nama_user: body.nama,
+            email:body.email,
             password: cryptPassword
         })
 

@@ -13,13 +13,28 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   mst_user.init({
-    nik_user: DataTypes.STRING,
-    nama_user: DataTypes.STRING,
-    password: DataTypes.STRING,
-    img_url: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN,
-    email: DataTypes.STRING,
-    status: DataTypes.STRING
+    nik_user: {
+      type:DataTypes.STRING
+    },
+    nama_user: {
+      type:DataTypes.STRING
+    },
+    password: {
+      type:DataTypes.STRING
+    },
+    img_url: {
+      type:DataTypes.STRING
+    },
+    is_active: {
+      type:DataTypes.BOOLEAN,
+      defaultValue:true
+    },
+    email: {
+      type:DataTypes.STRING
+    },
+    status: {
+      type:DataTypes.STRING
+    }
   }, {
     sequelize,
     modelName: 'mst_user',
