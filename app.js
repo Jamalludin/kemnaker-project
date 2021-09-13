@@ -3,14 +3,16 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors  = require ('cors')
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const indexRouter = require('./app/routes/index');
+const usersRouter = require('./app/routes/users');
+const usersAuthRouter = require('./app/routes/users-auth/users-router');
 
 const app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/app/views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
@@ -19,8 +21,25 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+let whiteList = [
+  'http://localhost:3000'
+]
+
+let corsOptions = {
+  origin: function (origin, callBack) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      callBack(null, true)
+    } else {
+      callBack(new Error('Not Allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/user', usersAuthRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

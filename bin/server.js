@@ -8,11 +8,13 @@ const app = require('../app');
 const debug = require('debug')('kemnaker-project:server');
 const http = require('http');
 
+require ('dotenv').config()
+
 /**
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.BACKEND_PORT || '3000');
 app.set('port', port);
 
 /**
@@ -25,7 +27,7 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, console.log(`Server is Running on Http://localhost:${port}`));
 server.on('error', onError);
 server.on('listening', onListening);
 
