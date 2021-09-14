@@ -18,5 +18,6 @@ module.exports = {
     "port": process.env.DB_PORT_PROD,
     "dialect": process.env.DB_DIALECT,
     "timezone": process.env.DB_TIMEZONE || "Asia/Jakarta"
-  }
+  },
+  TOKEN_SECRET_KEY: process.env.TOKEN || 'kmzway87aa'
 }

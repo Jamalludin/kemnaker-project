@@ -1,1 +1,1 @@
-module.exports.userAuth = require('./users-auth/user-auth-svc')
+module.exports.userAuth = require('./users-auth-svc/user-auth')

@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING
     },
     is_active: {
+      require:true,
       type:DataTypes.BOOLEAN,
       defaultValue:true
     },
