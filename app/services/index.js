@@ -1,0 +1,1 @@
+module.exports.userAuth = require('./users-auth-svc/user-auth')
