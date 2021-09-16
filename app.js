@@ -8,6 +8,7 @@ const cors  = require ('cors')
 const indexRouter = require('./app/routes/index');
 const usersRouter = require('./app/routes/users');
 const usersAuthRouter = require('./app/routes/users-auth/users-router');
+const presensiRouter = require('./app/routes/presensi/presensi-router');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(cors(corsOptions))
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/presensi', presensiRouter);
 app.use('/user', usersAuthRouter);
 
 // catch 404 and forward to error handler

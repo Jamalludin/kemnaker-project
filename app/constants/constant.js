@@ -3,7 +3,8 @@ const errorCode = {
     BAD_REQUEST:'BR',
     NOT_ACCEPTABLE:'NA',
     SERVER_UNAVAILABLE:'SU',
-    DATA_NOT_FOUND:'NF'
+    DATA_NOT_FOUND:'NF',
+    TOKEN_EXP:'TE'
 }
 
 const responseCode = {
