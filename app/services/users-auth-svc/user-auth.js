@@ -45,6 +45,30 @@ const addUser = async (req) => {
     }
 }
 
+const updatedUserStatus = async (user, authStatus) => {
+    const transaction = await sequelize.transaction()
+
+    try {
+        const updatedUser = await MstUser.update({
+            status: authStatus
+        },{
+            where: {
+                id: user
+            }
+        })
+
+        transaction.commit()
+        return updatedUser
+
+    }catch (e) {
+        console.error(e)
+        transaction.rollback()
+        return {
+            code: common.codeMsg.ERROR_QUERY
+        }
+    }
+}
+
 async function registerUser (req) {
     const regis = await findUser(req)
 
@@ -87,11 +111,24 @@ async function userLogin (req) {
         }
     }
 
+    if (user && user.is_active === false) {
+        return {
+            code: common.codeMsg.USER_IN_ACTIVE
+        }
+    }
+
     const comparePassword = await bcrypt.compare(req.body.password, user.password)
 
     if (!comparePassword) {
         return {
             code: common.codeMsg.PASSWORD_NOT_MATCH
+        }
+    }
+
+    const updateStatus = await updatedUserStatus(user.id,'LOGIN')
+    if (updateStatus && updateStatus.code === common.codeMsg.ERROR_QUERY) {
+        return {
+            code: common.codeMsg.ERROR_QUERY
         }
     }
 
@@ -101,7 +138,6 @@ async function userLogin (req) {
         nama: user.nama_user,
         nik: user.nik_user,
         email: user.email,
-        status: user.status,
         token: token
     }
 }
