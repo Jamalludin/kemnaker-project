@@ -18,6 +18,13 @@ async function userAuthLogin(req, res) {
         })
     }
 
+    if (login.code && login.code === common.codeMsg.USER_IN_ACTIVE) {
+        return res.status(401).json({
+            code: common.codeMsg.USER_IN_ACTIVE,
+            code_msg:'Maaf. Akun Anda Sudah Tidak Aktive...'
+        })
+    }
+
     if (login.code && login.code === common.codeMsg.PASSWORD_NOT_MATCH) {
         return res.status(503).json({
             code: common.errorCode.NOT_ACCEPTABLE,

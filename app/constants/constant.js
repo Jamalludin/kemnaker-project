@@ -15,7 +15,8 @@ const codeMsg = {
     ERROR_QUERY: 5001,
     DATA_FOUND: 4005,
     DATA_NOT_FOUND: 4004,
-    PASSWORD_NOT_MATCH: 7007
+    PASSWORD_NOT_MATCH: 7007,
+    USER_IN_ACTIVE: 9876
 }
 
 module.exports = {

@@ -35,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type:DataTypes.STRING
+    },
+    status_absen: {
+      type:DataTypes.STRING
     }
   }, {
     sequelize,
