@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      mst_user.hasMany(models.history, { foreignKey: 'id_user' });
+      mst_user.hasMany(models.activty, { foreignKey: 'id_user' });
     }
   };
   mst_user.init({
