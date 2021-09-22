@@ -4,7 +4,7 @@ const saveImage = require('../../constants/utility')
 
 const history = models.history
 
-async function userAbsen (req) {
+async function userAbsenIn (req) {
     const transaction = await sequelize.transaction()
 
     const body = req.body
@@ -19,10 +19,10 @@ async function userAbsen (req) {
             latitude: body.location.latitude,
             longitude: body.location.longitude,
             status: body.status,
-            status: body.status,
             foto_selfie: saveSelfie.location.concat(saveSelfie.fileName),
             foto_ttd: saveSignature.location.concat(saveSignature.fileName),
             catatan: body.catatan,
+            waktu_masuk: new Date()
         }
 
         const saveAbsen = await history.create(data)
@@ -38,5 +38,5 @@ async function userAbsen (req) {
 }
 
 module.exports = {
-    userAbsen
+    userAbsenIn
 }

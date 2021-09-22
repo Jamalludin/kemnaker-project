@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.STRING,
     foto_selfie: DataTypes.STRING,
     foto_ttd: DataTypes.STRING,
-    catatan: DataTypes.STRING
+    catatan: DataTypes.STRING,
+    waktu_masuk: DataTypes.DATE,
+    waktu_keluar: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'history',

@@ -2,11 +2,18 @@ const service = require('../../services')
 const common = require('../../constants/constant')
 
 async function absenMasuk(req, res) {
-    const saveAbsen = await service.presensiInSvc.userAbsen(req)
+    const saveAbsen = await service.presensiInSvc.userAbsenIn(req)
+
+    if (!saveAbsen) {
+        return res.status(501).json({
+            response_code: common.errorCode.BAD_IMPLEMENTATION,
+            msg: "Terjadi Masalah Pada Server... Mohon Coba Beberapa Saat Lagi..."
+        })
+    }
 
     return res.status(200).json({
         response_code: common.responseCode.SUCCESS_RESPONSE,
-        data: saveAbsen
+        msg: "Anda Sudah Absen Hari Ini..."
     })
 }
 

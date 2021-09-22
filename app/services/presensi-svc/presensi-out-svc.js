@@ -1,42 +1,37 @@
 const models = require('../../../models')
 const {sequelize} = require('../../../models')
-const bcrypt = require('bcryptjs')
-const common = require('../../constants/constant')
-const config = require('../../../config/config')
-const jwt = require('jsonwebtoken')
+const saveImage = require('../../constants/utility')
 
-const MstUser = models.mst_user
+const history = models.history
 
-const findUser = async (req) => {
-    try {
-        const checkUser = await MstUser.findOne({where:{nik_user:req.body.nik}})
-
-        return checkUser
-    }catch (e) {
-        console.error(e)
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-}
-
-const addUser = async (req) => {
+async function userAbsenOut (req) {
     const transaction = await sequelize.transaction()
 
-    const cryptPassword = await bcrypt.hash(req.body.password, 10);
-
     const body = req.body
+    const id = req.params.id
+    const user = req.user.user
 
     try {
-        const saveUser = await MstUser.create({
-            nik_user: body.nik,
-            nama_user: body.nama,
-            email:body.email,
-            password: cryptPassword
-        })
+        const checkHistory = await history.findAll({where:{id_user:id}})
+        const lastIndex = checkHistory[checkHistory.length -1]
+
+        const saveSelfie = await saveImage.uploadImage(body.selfie, user.nik_user, 'selfie')
+        const saveSignature = await saveImage.uploadImage(body.signature, user.nik_user, 'signature')
+
+        const data = {
+            latitude: body.location.latitude,
+            longitude: body.location.longitude,
+            status: body.status,
+            foto_selfie: saveSelfie.location.concat(saveSelfie.fileName),
+            foto_ttd: saveSignature.location.concat(saveSignature.fileName),
+            catatan: body.catatan,
+            waktu_keluar: new Date()
+        }
+
+        const saveAbsen = await history.update(data,{where:{id:lastIndex.id}})
 
         transaction.commit()
-        return saveUser
+        return saveAbsen
 
     }catch (e) {
         console.error(e)
@@ -45,104 +40,6 @@ const addUser = async (req) => {
     }
 }
 
-const updatedUserStatus = async (user, authStatus) => {
-    const transaction = await sequelize.transaction()
-
-    try {
-        const updatedUser = await MstUser.update({
-            status: authStatus
-        },{
-            where: {
-                id: user
-            }
-        })
-
-        transaction.commit()
-        return updatedUser
-
-    }catch (e) {
-        console.error(e)
-        transaction.rollback()
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-}
-
-async function registerUser (req) {
-    const regis = await findUser(req)
-
-    if (regis && regis.code === common.codeMsg.ERROR_QUERY) {
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-
-    if (regis){
-        return {
-            code: common.codeMsg.DATA_FOUND,
-            msg: 'DATA_ADA'
-        }
-    }
-
-    const add = await addUser(req)
-
-    if (!add) {
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-
-    return add
-}
-
-async function userLogin (req) {
-    const user = await findUser(req)
-
-    if (user && user.code === common.codeMsg.ERROR_QUERY) {
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-
-    if (!user) {
-        return {
-            code: common.codeMsg.DATA_NOT_FOUND
-        }
-    }
-
-    if (user && user.is_active === false) {
-        return {
-            code: common.codeMsg.USER_IN_ACTIVE
-        }
-    }
-
-    const comparePassword = await bcrypt.compare(req.body.password, user.password)
-
-    if (!comparePassword) {
-        return {
-            code: common.codeMsg.PASSWORD_NOT_MATCH
-        }
-    }
-
-    const updateStatus = await updatedUserStatus(user.id,'LOGIN')
-    if (updateStatus && updateStatus.code === common.codeMsg.ERROR_QUERY) {
-        return {
-            code: common.codeMsg.ERROR_QUERY
-        }
-    }
-
-    let token = jwt.sign({user},config.TOKEN_SECRET_KEY,{expiresIn: "2h"})
-
-    return {
-        nama: user.nama_user,
-        nik: user.nik_user,
-        email: user.email,
-        token: token
-    }
-}
-
 module.exports = {
-    registerUser,
-    userLogin
+    userAbsenOut
 }

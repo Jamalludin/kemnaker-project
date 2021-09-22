@@ -29,6 +29,12 @@ module.exports = {
       catatan: {
         type: Sequelize.STRING
       },
+      waktu_masuk: {
+        type: Sequelize.DATE
+      },
+      waktu_keluar: {
+        type: Sequelize.DATE
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
