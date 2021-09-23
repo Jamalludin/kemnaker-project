@@ -4,44 +4,24 @@ const saveImage = require('../../constants/utility')
 
 const user = models.mst_user
 const history = models.history
-const activity = models.activty
-
-const relations = (relationShip) => {
-    return [
-        {
-            model: history,
-            attributes: [
-                ['id', 'id_history'],
-                'latitude',
-                'longitude',
-                'status',
-                'foto_selfie',
-                'foto_ttd',
-                'catatan'
-            ],
-            required: true
-        },
-        {
-            model: activity,
-            attributes: [
-                ['id', 'id_activity'],
-                'aktifitas',
-                'waktu'
-            ],
-            required: true
-        }
-    ]
-}
 
 async function absenHistory (req) {
     const transaction = await sequelize.transaction()
+    const id = req.user.user.id
+
+    const pagination = {
+        limit: Number(req.query.limit),
+        offset: Number(req.query.offset)
+    }
 
     try {
-        const checkHistory = await history.findAll({where:{id_user:id}})
-
+        const checkHistory = await history.findAndCountAll({
+            where:{id_user:id},
+            ...pagination
+        })
 
         transaction.commit()
-        return saveAbsen
+        return checkHistory
 
     }catch (e) {
         console.error(e)
