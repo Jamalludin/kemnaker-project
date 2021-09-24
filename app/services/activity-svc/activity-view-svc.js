@@ -1,25 +1,26 @@
 const models = require('../../../models')
 const {sequelize} = require('../../../models')
 
-const history = models.history
+const activty = models.activty
 
-async function absenHistory (req) {
+async function activtyView (req) {
     const transaction = await sequelize.transaction()
     const id = req.user.user.id
+    const query = req.query
 
     const pagination = {
-        limit: Number(req.query.limit),
-        offset: Number(req.query.offset)
+        limit: Number(query.limit),
+        offset: Number(query.offset)
     }
 
     try {
-        const checkHistory = await history.findAndCountAll({
-            where:{id_user:id},
+        const viewActivity = await activty.findAndCountAll({
+            where: {id_user: id},
             ...pagination
         })
 
         transaction.commit()
-        return checkHistory
+        return viewActivity
 
     }catch (e) {
         console.error(e)
@@ -29,5 +30,5 @@ async function absenHistory (req) {
 }
 
 module.exports = {
-    absenHistory
+    activtyView
 }
