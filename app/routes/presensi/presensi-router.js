@@ -11,6 +11,6 @@ router.put('/out/:id', auth, handler.presensiOut.absenKeluar)
 
 router.get('/history', auth, handler.presensiHistory.historyAbsen)
 
-router.get('/profil', auth, handler.presensiProfile.absenProfil)
+router.get('/profile', auth, handler.presensiProfile.userProfile)
 
 module.exports = router;
