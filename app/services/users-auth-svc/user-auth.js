@@ -142,7 +142,39 @@ async function userLogin (req) {
     }
 }
 
+async function userLogout (req) {
+    const user = await findUser(req)
+
+    if (user && user.code === common.codeMsg.ERROR_QUERY) {
+        return {
+            code: common.codeMsg.ERROR_QUERY
+        }
+    }
+
+    if (!user) {
+        return {
+            code: common.codeMsg.DATA_NOT_FOUND
+        }
+    }
+
+    if (user && user.is_active === false) {
+        return {
+            code: common.codeMsg.USER_IN_ACTIVE
+        }
+    }
+
+    const updateStatus = await updatedUserStatus(user.id,'LOGOUT')
+    if (updateStatus && updateStatus.code === common.codeMsg.ERROR_QUERY) {
+        return {
+            code: common.codeMsg.ERROR_QUERY
+        }
+    }
+
+    return true
+}
+
 module.exports = {
     registerUser,
-    userLogin
+    userLogin,
+    userLogout
 }

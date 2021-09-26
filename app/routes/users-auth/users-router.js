@@ -7,6 +7,6 @@ router.post('/auth/login', handler.userAuthLogin.userAuthLogin)
 
 router.post('/auth/register', handler.userAuthRegister.userAuthRegister)
 
-router.post('/auth/logout', auth, handler.userAuthLogout.userLogout)
+router.post('/auth/logout', auth, handler.userAuthLogout.userAuthLogout)
 
 module.exports = router
